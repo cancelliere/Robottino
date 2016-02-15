@@ -1,0 +1,18 @@
+Robottino	KEYWORD1
+
+ruota		KEYWORD2
+veloce	LITERAL1
+lento		LITERAL1
+crazy	LITERAL1
+
+bocca	KEYWORD2
+mostra	KEYWORD2
+
+nasoArcobaleno	KEYWORD2
+naso		KEYWORD2
+
+superMario	KEYWORD2
+beep		KEYWORD2
+theremin	KEYWORD2
+
+avvia		KEYWORD2
