@@ -17,7 +17,7 @@
 #define STEP_DURATION 1        // 1ms internal crossFade delay; increase for slower fades
 #define HOLD_DURATION 0        // Optional hold when a color is complete, before the next crossFade
 
-#define DISPLAY_DELAY 250        // delay between refreshes of a facial expression
+#define DISPLAY_DELAY 5
 
 Servo servo;
 
@@ -25,15 +25,16 @@ Servo servo;
 // ----------RGB (Nose) behaviour definition----------
 
 // Color arrays
-int nero[3]  = { 0, 0, 0 };
-int bianco[3]  = { 255, 255, 255 };
-int rosso[3]    = { 255, 0, 0 };
+int nero[3] = { 0, 0, 0 };
+int bianco[3] = { 255, 255, 255 };
+int rosso[3] = { 255, 0, 0 };
 int arancio[3] = { 255, 128, 0};
 int giallo[3] = { 100, 240, 0 };
 int verde[3]  = { 0, 255, 0 };
 int blu[3]   = { 0, 0, 255 };
 int indaco[3] = { 64, 0, 128 };
 int viola[3] = { 230, 128, 230 };
+int arcobaleno[3] = { -1, 0, 0};
 
 // Set initial color
 int redVal = nero[0];
@@ -45,14 +46,18 @@ int prevR = redVal;
 int prevG = grnVal;
 int prevB = bluVal;
 
-unsigned long currentRGBMillis;
-unsigned long previousRGBMillis=0;
+unsigned long currentRGBMillis;       // used to control the fading speed of the rainbow
+unsigned long previousRGBMillis = 0;
+
+unsigned long currentBlinkMillis;     // used in "nasoLampeggiante"
+unsigned long previousBlinkMillis = 0;
 
 byte evalFadeHold = 0;            // 0: evaluate parameters - 1: fade - 2: hold
 int RGBStep = 0;                  // index used during the progress of "crossFade"
-int R, G, B;                     // RGB values to reach at the end of a "crossFade"
+int R, G, B;                      // RGB values to reach at the end of a "crossFade"
 int stepR, stepG, stepB;          // from the beginning to the end of a "crossFade" each colour is changed every step"X"
-byte colour = 0;                  // index used during the progress of "nasoArcobaleno"
+byte currentColour = 0;           // index used during the progress of "nasoArcobaleno"
+bool blinkStep = 0;
 
 void RGBInit() {
   pinMode(RED_PIN, OUTPUT);
@@ -124,79 +129,60 @@ void crossFade(int color[3]) {
     previousRGBMillis = currentRGBMillis;
     evalFadeHold = 0;
     
-    colour ++;
+    currentColour ++;
   }
 }
 
 // Rainbow
-void Robottino::nasoArcobaleno () {   //a value of STEP_DURATION equal to 1 completes "nasoArcobaleno" in 6.3 s
-  switch (colour) {
-    case 0:
-      crossFade(rosso);
-      break;
-    case 1:
-      crossFade(arancio);
-      break;
-    case 2:
-      crossFade(giallo);
-      break;
-    case 3:
-      crossFade(verde);
-      break;
-    case 4:
-      crossFade(blu);
-      break;
-    case 5:
-      crossFade(indaco);
-      break;
-    case 6:
-      crossFade(viola);
-      break;
-    default:
-      colour = 0;
+
+
+void Robottino::naso (int col[3]) {
+  if (col[0] == -1) {  // Rainbow
+    switch (currentColour) {
+      case 0:
+        crossFade(rosso);
+        break;
+      case 1:
+        crossFade(arancio);
+        break;
+      case 2:
+        crossFade(giallo);
+        break;
+      case 3:
+        crossFade(verde);
+        break;
+      case 4:
+        crossFade(blu);
+        break;
+      case 5:
+        crossFade(indaco);
+        break;
+      case 6:
+        crossFade(viola);
+        break;
+      default:
+        currentColour = 0;
+    }
+  }
+  else {    // Fixed colour
+    analogWrite(RED_PIN, col[0]);
+    analogWrite(GRN_PIN, col[1]);
+    analogWrite(BLU_PIN, col[2]);
   }
 }
 
-// Fixed colour
-void Robottino::naso (int colour[3]) {
-  analogWrite(RED_PIN, colour[0]);
-  analogWrite(GRN_PIN, colour[1]);
-  analogWrite(BLU_PIN, colour[2]);
-}
-
-// ----------Display (Mouth) behaviour definition----------
-
-U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);  // I2C / TWI
-
-unsigned long currentDisplayMillis;
-unsigned long previousDisplayMillis = 0;
-
-// Draw different kinds of facial expressions on the display
-void Robottino::bocca(const uint8_t mouthStyle[]) {
-  currentDisplayMillis = millis();
-  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { //-----si potrebbe fare in modo di attendere per il refresh solo se l'immagine non è cambiata
-    u8g.firstPage();
-    do {
-      u8g.drawBitmapP(0, 0, 16, 64, mouthStyle);
-    } while( u8g.nextPage() );
-    previousDisplayMillis = currentDisplayMillis;
-  }
-}
-
-// Print values read by the sensors with a bar indicator
-void Robottino::mostra (int sensorValue) {
-  unsigned int normalizedValue = sensorValue/8;     // 1024 normalized to 128
-  currentDisplayMillis = millis();
-  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { // with these lines commented out, the display is refreshed each time the function is called
-    u8g.firstPage();
-    do {
-      u8g.setFont(u8g_font_unifont);
-      u8g.drawStr( 0, 20, "Valore: ");
-      u8g.setPrintPos( 60, 20);
-      u8g.print(sensorValue);
-      u8g.drawBox(64 - normalizedValue/2, 40, normalizedValue, 10);  //start from the middle to center the box
-    } while( u8g.nextPage() );
-    previousDisplayMillis = currentDisplayMillis;
+void Robottino::nasoLampeggiante (int interval, int col[3]) {
+  currentBlinkMillis = millis();
+  if (currentBlinkMillis - previousBlinkMillis >= interval) {
+    if (!blinkStep) {       // Alternate between the wanted colour...
+      naso(col);
+      blinkStep ^= 1;
+    }
+    else {
+      naso(nero); // ... and a turned off LED
+      blinkStep ^= 1;
+    }
+    previousBlinkMillis = currentBlinkMillis;
   }
 }
 
@@ -210,31 +196,80 @@ void sensorsInit() {
   pinMode(ECHO_PIN, INPUT);
 }
 
-// ----------Antennas----------
-
-int antennaDestra() {
-  return analogRead(LDR_DX_PIN);
-}
-
-int antennaSinistra() {
-  return analogRead(LDR_SX_PIN);
-}
-
-int antenne() {
-  return (analogRead(LDR_DX_PIN) + analogRead(LDR_SX_PIN)) / 2;
-}
 
 // ----------Eyes----------
 // Returns distance in cm
-int occhi () {               //can't use newPing library because of compatibility problems with tone() on Arduino UNO
+int eyesDistance () {               //can't use newPing library because of compatibility problems with tone() on Arduino UNO
   digitalWrite(TRIG_PIN, HIGH);   //(see: http://forum.arduino.cc/index.php?topic=184162.0 )
   delay(1);
   digitalWrite(TRIG_PIN, LOW);
-  int distance = pulseIn(ECHO_PIN, HIGH, 8550) / 57;  //Timeout if distance > 150 cm; divide by round-trip microseconds per cm to get cm
+  int distance = pulseIn(ECHO_PIN, HIGH, 5700) / 57;  //Timeout if distance > 100 cm; divide by round-trip microseconds per cm to get cm
   return distance;
 }
 
 
+ 
+// ----------Display (Mouth) behaviour definition----------
+
+U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);  // I2C / TWI
+
+unsigned long currentDisplayMillis;
+unsigned long previousDisplayMillis = 0;
+
+byte occhi = 1;
+byte antennaDestra = 2;
+byte antennaSinistra = 3;
+byte antenne = 4;
+
+// Draw different kinds of facial expressions on the display
+void Robottino::espressione(const uint8_t mouthStyle[]) {
+  currentDisplayMillis = millis();
+  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { //-----si potrebbe fare in modo di attendere per il refresh solo se l'immagine non è cambiata
+    u8g.firstPage();
+    do {
+      u8g.drawBitmapP(0, 0, 16, 64, mouthStyle);
+    } while( u8g.nextPage() );
+    previousDisplayMillis = currentDisplayMillis;
+  }
+}
+
+// Print values read by the sensors with a bar indicator
+void Robottino::mostra (byte sensor) {
+  unsigned int sensorValue, normalizedValue;
+  
+  if (sensor == occhi) {
+    sensorValue = eyesDistance();
+    normalizedValue = sensorValue;  // no need to normalize because the limit is set to 100 cm
+  }
+  else {
+    
+    if (sensor == antennaDestra) {
+        sensorValue = analogRead(LDR_DX_PIN) / 100;
+      }
+    else if (sensor == antennaSinistra) {
+      sensorValue = analogRead(LDR_SX_PIN) / 100;
+    }
+    else if (sensor == antenne) {
+      sensorValue = (analogRead(LDR_DX_PIN) + analogRead(LDR_SX_PIN)) / 2 / 100;
+    }
+    normalizedValue = sensorValue * 12; // max sensorValue is 100, so we multiply to use all the width
+  }
+  
+  currentDisplayMillis = millis();
+  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { // with these lines commented out, the display is refreshed each time the function is called
+    u8g.firstPage();
+    do {
+      u8g.setFont(u8g_font_unifont);
+      u8g.setPrintPos( 55, 20);
+      u8g.print(sensorValue);
+      u8g.drawBox(64 - normalizedValue/2, 40, normalizedValue, 10);  //start from the middle to center the box
+    } while( u8g.nextPage() );
+    previousDisplayMillis = currentDisplayMillis;
+  }
+}
+
+
+/*
 int veloce = 10; //different delay between steps
 int lento = 60;
 int crazy = 0;
@@ -267,9 +302,9 @@ void Robottino::ruota (int stepDelay) {
     previousServoMillis = currentServoMillis;
   }
 }
+*/
 
-
-
+/*
 int pitch;
 unsigned long currentTime;
 unsigned long previousTime = 0;
@@ -470,16 +505,16 @@ void Robottino::superMario()
   sing(2);
 }
 
-
+*/
 
 Robottino::Robottino() {
-  servoInit();
+  //servoInit();
 
-  //RGBInit();
+  RGBInit();
+  
+  sensorsInit();
   
   //buzzInit();
-
-  //sensorsInit();
 }
 
 

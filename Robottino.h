@@ -11,12 +11,13 @@ public:
   Robottino();
   
   void ruota (int stepDelay);
-  void bocca(const uint8_t mouthStyle[]);
+  void espressione(const uint8_t mouthStyle[]);
   
-  void mostra (int sensorValue);
+  void mostra (byte sensor);
   
-  void nasoArcobaleno ();
   void naso (int colour[3]);
+  void nasoLampeggiante (int interval, int col[3]);
+
   
   void theremin(int sensorValue);
   void beep ();
@@ -27,10 +28,10 @@ public:
 extern const uint8_t vuota[] PROGMEM;
 extern const uint8_t normale[] PROGMEM;
 
-int antennaDestra();
-int antennaSinistra();
-int antenne();
-int occhi();
+extern byte antennaDestra;
+extern byte antennaSinistra;
+extern byte antenne;
+extern byte occhi;
 
 extern int veloce;
 extern int lento;
@@ -45,7 +46,7 @@ extern int verde[3];
 extern int blu[3];
 extern int indaco[3];
 extern int viola[3];
-extern int biancoSpento[3];
+extern int arcobaleno[3];
 
 #endif
 

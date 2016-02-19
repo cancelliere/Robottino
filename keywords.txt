@@ -1,14 +1,11 @@
 Robottino	KEYWORD1
 
 ruota		KEYWORD2
-veloce	LITERAL1
-lento		LITERAL1
-crazy	LITERAL1
 
 bocca	KEYWORD2
 mostra	KEYWORD2
 
-nasoArcobaleno	KEYWORD2
+nasoLampeggiante	KEYWORD2
 naso		KEYWORD2
 
 superMario	KEYWORD2
