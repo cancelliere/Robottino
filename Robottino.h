@@ -10,23 +10,29 @@ class Robottino {
 public:
   Robottino();
   
-  void ruota (int stepDelay);
-  void espressione(const uint8_t mouthStyle[]);
-  
-  void mostra (byte sensor);
+  //TESTED
   
   void naso (int colour[3]);
   void nasoLampeggiante (int interval, int col[3]);
-
-  
-  void theremin(int sensorValue);
-  void beep ();
+  void beep (int interval);
+  void theremin(byte sensor);
   void superMario();
+  void espressione(const uint8_t mouthStyle[]);
+  void mostra (byte sensor);
 
+  //UNTESTED
+  void ruota (int stepDelay);
+  void ruotaConLuce ();
+
+  void begin ();
 };
+
+void servoInit();
 
 extern const uint8_t vuota[] PROGMEM;
 extern const uint8_t normale[] PROGMEM;
+extern const uint8_t trollface[] PROGMEM;
+
 
 extern byte antennaDestra;
 extern byte antennaSinistra;
