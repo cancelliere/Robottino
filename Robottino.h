@@ -9,9 +9,9 @@
 class Robottino {
 public:
   Robottino();
-  
+
   //TESTED
-  
+
   void naso (int colour[3]);
   void nasoLampeggiante (int col[3], int interval);
   void beep (int interval);
@@ -38,7 +38,7 @@ extern const uint8_t sad[] PROGMEM;
 extern const uint8_t happy[] PROGMEM;
 extern const uint8_t smile[] PROGMEM;
 extern const uint8_t dumb[] PROGMEM;
-extern const uint8_t scaried[] PROGMEM;
+extern const uint8_t scared[] PROGMEM;
 
 
 extern byte antennaDestra;
@@ -62,4 +62,3 @@ extern int viola[3];
 extern int arcobaleno[3];
 
 #endif
-

@@ -31,7 +31,7 @@ SoftwareServo servo;
 // ----------RGB (Nose) behaviour definition----------
 
 // Color arrays
-int nero[3]  = { 0, 0, 0 };          
+int nero[3]  = { 0, 0, 0 };
 int bianco[3]  = { 240, 240, 240 };
 int rosso[3]    = { 240, 0, 0 };
 int arancio[3] = { 240, 120, 0};
@@ -97,7 +97,7 @@ int calculateVal(int step, int val, int counter) {
 
 void crossFade(int color[3]) {
   currentRGBMillis = millis();
-  
+
   if (evalFadeHold == 0) {
     //R = color[0];
     G = color[1];
@@ -108,7 +108,7 @@ void crossFade(int color[3]) {
 
     evalFadeHold = 1;
   }
-  
+
   else if (currentRGBMillis - previousRGBMillis >= STEP_DURATION && evalFadeHold==1) {  // Fade
 
     //redVal = calculateVal(stepR, redVal, RGBStep);
@@ -118,16 +118,16 @@ void crossFade(int color[3]) {
     //analogWrite(RED_PIN, redVal);     // the tone() function conflicts with PWM on pin 11 (RED), so to avoid weird noises we do not use RED fading
     analogWrite(GRN_PIN, grnVal);
     analogWrite(BLU_PIN, bluVal);
-    
+
     previousRGBMillis = currentRGBMillis;
     RGBStep+=STEP_WIDTH;
-    
+
     if( RGBStep >= TOTAL_STEPS ) {
       evalFadeHold = 2;
       RGBStep = 0;
     }
   }
-  
+
   // Update current values for next loop
   else if (currentRGBMillis - previousRGBMillis >= HOLD_DURATION && evalFadeHold==2) {  // Hold
     prevR = redVal;
@@ -135,7 +135,7 @@ void crossFade(int color[3]) {
     prevB = bluVal;
     previousRGBMillis = currentRGBMillis;
     evalFadeHold = 0;
-    
+
     currentColour ++;
   }
 }
@@ -214,7 +214,7 @@ int eyesDistance () {               //can't use newPing library because of compa
 }
 
 
- 
+
 // ----------Display (Mouth) behaviour definition----------
 
 U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);  // I2C / TWI
@@ -243,13 +243,13 @@ void Robottino::espressione(const uint8_t mouthStyle[]) {
 // Print values read by the sensors with a bar indicator
 void Robottino::mostra (byte sensor) {  // it takes around 110 ms to complete with the reading from any of the sensors
   unsigned int sensorValue, normalizedValue;
-  
+
   if (sensor == occhi) {
     sensorValue = eyesDistance();
     normalizedValue = sensorValue;  // no need to normalize because the limit is set to 100 cm
   }
   else {
-    
+
     if (sensor == antennaDestra) {
         sensorValue = analogRead(LDR_DX_PIN) / 100;
       }
@@ -261,7 +261,7 @@ void Robottino::mostra (byte sensor) {  // it takes around 110 ms to complete wi
     }
     normalizedValue = sensorValue * 12; // max sensorValue is 100, so we multiply to use all the width
   }
-  
+
   currentDisplayMillis = millis();
   if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { // with these lines commented out, display refreshed each time the function is called
     u8g.firstPage();
@@ -313,22 +313,22 @@ int melody[] = {
   0, NOTE_C7, NOTE_E7, 0,
   NOTE_G7, 0, 0,  0,
   NOTE_G6, 0, 0, 0,
-  
+
   NOTE_C7, 0, 0, NOTE_G6,
   0, 0, NOTE_E6, 0,
   0, NOTE_A6, 0, NOTE_B6,
   0, NOTE_AS6, NOTE_A6, 0,
-  
+
   NOTE_G6, NOTE_E7, NOTE_G7,
   NOTE_A7, 0, NOTE_F7, NOTE_G7,
   0, NOTE_E7, 0,NOTE_C7,
   NOTE_D7, NOTE_B6, 0, 0,
-  
+
   NOTE_C7, 0, 0, NOTE_G6,
   0, 0, NOTE_E6, 0,
   0, NOTE_A6, 0, NOTE_B6,
   0, NOTE_AS6, NOTE_A6, 0,
-  
+
   NOTE_G6, NOTE_E7, NOTE_G7,
   NOTE_A7, 0, NOTE_F7, NOTE_G7,
   0, NOTE_E7, 0,NOTE_C7,
@@ -340,22 +340,22 @@ int tempo[] = {
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
-  
+
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
-  
+
   9, 9, 9,
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
-  
+
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
   12, 12, 12, 12,
-  
+
   9, 9, 9,
   12, 12, 12, 12,
   12, 12, 12, 12,
@@ -423,7 +423,7 @@ void buzz(long frequency, long length) {
     delayMicroseconds(delayValue); // wait again or the calculated delay value
   }
   //digitalWrite(BLU_PIN,LOW);
-  
+
 }
 
 void sing(int song) {
@@ -431,44 +431,44 @@ void sing(int song) {
   if(song==2) {
     int size = sizeof(underworld_melody) / sizeof(int);
     for (int thisNote = 0; thisNote < size; thisNote++) {
-      
+
       // to calculate the note duration, take one second
       // divided by the note type.
       //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
       int noteDuration = 1000/underworld_tempo[thisNote];
-      
+
       buzz(underworld_melody[thisNote],noteDuration);
-      
+
       // to distinguish the notes, set a minimum time between them.
       // the note's duration + 30% seems to work well:
       int pauseBetweenNotes = noteDuration * 1.30;
       delay(pauseBetweenNotes);
-      
+
       // stop the tone playing:
       buzz(0,noteDuration);
-      
+
     }
-    
+
   }
   else {
     int size = sizeof(melody) / sizeof(int);
     for (int thisNote = 0; thisNote < size; thisNote++) {
-      
+
       // to calculate the note duration, take one second
       // divided by the note type.
       //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
       int noteDuration = 1000/tempo[thisNote];
-      
+
       buzz(melody[thisNote],noteDuration);
-      
+
       // to distinguish the notes, set a minimum time between them.
       // the note's duration + 30% seems to work well:
       int pauseBetweenNotes = noteDuration * 1.30;
       delay(pauseBetweenNotes);
-      
+
       // stop the tone playing:
       buzz(0,noteDuration);
-      
+
     }
   }
 }
@@ -502,16 +502,16 @@ void servoInit () {
 
 void Robottino::ruota (int stepDelay) {
   currentServoMillis = millis();
-  
+
   if (currentServoMillis - previousServoMillis >= stepDelay) {
-    
+
     if (angle < - ANGLE_BOUND || angle > ANGLE_BOUND) {
       dir = -dir;
     }
     angle += dir * ANGLE_STEP;
-    
+
     servo.write (angle + 90);
-    
+
     previousServoMillis = currentServoMillis;
   }
   SoftwareServo::refresh();
@@ -519,8 +519,8 @@ void Robottino::ruota (int stepDelay) {
 
 void Robottino::ruotaConLuce () {
   currentServoMillis = millis();
-  
- 
+
+
   if (currentServoMillis - previousServoMillis >= 25) {
 	  average = (analogRead(LDR_SX_PIN) + analogRead(LDR_DX_PIN)) / 2;
 	  if (average < THRESHOLD2)
@@ -539,7 +539,7 @@ void Robottino::ruotaConLuce () {
 			this->naso(nero);
 		  }
 		  multiplier = 1;
-		
+
 	  }
 	  else	if (multiplier != 5) {
 
@@ -550,7 +550,7 @@ void Robottino::ruotaConLuce () {
 	 if (angle < -ANGLE_BOUND || angle > ANGLE_BOUND) {
 		  dir = -dir;
 	  }
-	  
+
 	  angle += dir * ANGLE_STEP * multiplier;
 	  servo.write(angle + 90);
 	  previousServoMillis = currentServoMillis;
@@ -559,13 +559,13 @@ void Robottino::ruotaConLuce () {
 }
 
 
-void Robottino::begin() {  
+void Robottino::begin() {
   RGBInit();
-  
+
   sensorsInit();
-  
+
   buzzInit();
-  
+
   servoInit();
 
   u8g.firstPage();  // turn the display black
@@ -575,7 +575,7 @@ void Robottino::begin() {
 }
 
 Robottino::Robottino() {
-  
+
 }
 
 
@@ -986,7 +986,7 @@ const uint8_t smile[] PROGMEM = {
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
-const uint8_t dumb[] PROGMEM = { 
+const uint8_t dumb[] PROGMEM = {
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xF0, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0x1F, 0xFC, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
@@ -1251,4 +1251,3 @@ const uint8_t happy [] PROGMEM= {
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 	0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 };
-
