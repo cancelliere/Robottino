@@ -96,6 +96,13 @@ int calculateVal(int step, int val, int counter) {
 
 void crossFade(int color[3]) {
   currentRGBMillis = millis();
+  /*
+  Serial.print(color[0]);
+  Serial.print(" ");
+  Serial.print(color[1]);
+  Serial.print(" ");
+  Serial.println(color[2]);
+  */
   
   if (evalFadeHold == 0) {
     //R = color[0];
@@ -109,9 +116,18 @@ void crossFade(int color[3]) {
   }
   
   else if (currentRGBMillis - previousRGBMillis >= STEP_DURATION && evalFadeHold==1) {  // Fade
+
+
+
     //redVal = calculateVal(stepR, redVal, RGBStep);
     grnVal = calculateVal(stepG, grnVal, RGBStep);
     bluVal = calculateVal(stepB, bluVal, RGBStep);
+
+    Serial.print(redVal);
+    Serial.print(" ");
+    Serial.print(grnVal);
+    Serial.print(" ");
+    Serial.println(bluVal);
     
     //analogWrite(RED_PIN, redVal);     // the tone() function conflicts with PWM on pin 11 (RED), so to avoid weird noises we do not use RED fading
     analogWrite(GRN_PIN, grnVal);
@@ -121,6 +137,7 @@ void crossFade(int color[3]) {
     RGBStep+=10;
     
     if( RGBStep >= 255 ) {
+      Serial.println("Colore completato");
       evalFadeHold = 2;
       RGBStep = 0;
     }
@@ -228,7 +245,7 @@ byte antenne = 4;
 // Draw different kinds of facial expressions on the display
 void Robottino::espressione(const uint8_t mouthStyle[]) {
   currentDisplayMillis = millis();
-  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { //-----si potrebbe fare in modo di attendere per il refresh solo se l'immagine non è cambiata
+  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) {
     u8g.firstPage();
     do {
       u8g.drawBitmapP(0, 0, 16, 64, mouthStyle);
@@ -261,7 +278,7 @@ void Robottino::mostra (byte sensor) {  // it takes around 110 ms to complete wi
   }
   
   currentDisplayMillis = millis();
-  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { // with these lines commented out, the display is refreshed each time the function is called
+  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) { // with these lines commented out, display refreshed each time the function is called
     u8g.firstPage();
     do {
       u8g.setFont(u8g_font_unifont);
@@ -481,7 +498,7 @@ void Robottino::superMario()
 
 
 int veloce = 10; //different delay between steps
-int lento = 60;
+int lento = 50;
 int crazy = 0;
 
 int angle = 0;  //reference given to the initial position, which is set in servoInit to 90 degrees
@@ -498,14 +515,7 @@ void servoInit () {
   delay(30);    //wait for the servo to reach that position
 }
 
-void Robottino::ruota (int speed) {
-  
-  if (speed == -1) {
-    stepDelay = ( analogRead(LDR_SX_PIN) + analogRead(LDR_DX_PIN) ) / 2;
-  }
-  else {
-    speed = stepDelay;
-  }
+void Robottino::ruota (int stepDelay) {
   currentServoMillis = millis();
   
   if (currentServoMillis - previousServoMillis >= stepDelay) {
@@ -526,25 +536,29 @@ void Robottino::ruotaConLuce () {
   
   if (currentServoMillis - previousServoMillis >= 25) {
   
-    average=( analogRead(LDR_SX_PIN) + analogRead(LDR_DX_PIN) ) / 2;
+    average = ( analogRead(LDR_SX_PIN) + analogRead(LDR_DX_PIN) ) / 2;
     
     if ( average < THRESHOLD2 ) {
       multiplier = 0;
     }
+
     else if ( average < THRESHOLD1 ) {
       multiplier = 1;
     }
+
     else {
       multiplier = 5;
     }
     
     
     if (angle < - ANGLE_BOUND || angle > ANGLE_BOUND) {
+      angle = dir * ANGLE_BOUND;  //this avoids the stepper from being stuck outside the available range
       dir = -dir;
     }
     
     angle += dir * ANGLE_STEP * multiplier;
     
+    Serial.println(angle);
     servo.write(angle + 90);
       
     previousServoMillis = currentServoMillis;

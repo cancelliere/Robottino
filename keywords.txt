@@ -1,8 +1,9 @@
 Robottino	KEYWORD1
 
 ruota		KEYWORD2
+ruotaConLuce	KEYWORD2
 
-bocca	KEYWORD2
+espressione	KEYWORD2
 mostra	KEYWORD2
 
 nasoLampeggiante	KEYWORD2
@@ -12,4 +13,4 @@ superMario	KEYWORD2
 beep		KEYWORD2
 theremin	KEYWORD2
 
-avvia		KEYWORD2
+begin		KEYWORD2
