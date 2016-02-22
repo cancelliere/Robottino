@@ -192,7 +192,7 @@ void Robottino::naso (int col[3]) {
   }
 }
 
-void Robottino::nasoLampeggiante (int interval, int col[3]) {
+void Robottino::nasoLampeggiante (int col[3], int interval) {
   currentBlinkMillis = millis();
   if (currentBlinkMillis - previousBlinkMillis >= interval) {
     if (!blinkStep) {       // Alternate between the wanted colour...

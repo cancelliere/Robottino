@@ -13,7 +13,7 @@ public:
   //TESTED
   
   void naso (int colour[3]);
-  void nasoLampeggiante (int interval, int col[3]);
+  void nasoLampeggiante (int col[3], int interval);
   void beep (int interval);
   void theremin(byte sensor);
   void superMario();
