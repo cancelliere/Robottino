@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "pitches.h"
-#include "Servo.h"
+#include "SoftwareServo.h"
 #include "U8glib.h"
 
 class Robottino {

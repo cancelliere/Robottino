@@ -18,27 +18,28 @@
 
 
 //RGB fade timing
-#define STEP_DURATION 150        // since one display refresh takes around 110 ms while reading the sensors' values, this delay is larger to avoid any influence
+#define STEP_DURATION 100        // since one display refresh takes around 110 ms while reading the sensors' values, this delay is larger to avoid any influence
 #define HOLD_DURATION 0        // Optional hold when a color is complete, before the next crossFade
-#define STEP_WIDTH 6
+#define STEP_WIDTH 10
+#define TOTAL_STEPS 240
 
 #define DISPLAY_DELAY 100
 
-Servo servo;
+SoftwareServo servo;
 
 
 // ----------RGB (Nose) behaviour definition----------
 
 // Color arrays
-int nero[3] = { 0, 0, 0 };
-int bianco[3] = { 255, 255, 255 };
-int rosso[3] = { 255, 0, 0 };
-int arancio[3] = { 255, 128, 0};
-int giallo[3] = { 100, 240, 0 };
-int verde[3]  = { 0, 255, 0 };
-int blu[3]   = { 0, 0, 255 };
-int indaco[3] = { 64, 0, 128 };
-int viola[3] = { 230, 128, 230 };
+int nero[3]  = { 0, 0, 0 };          
+int bianco[3]  = { 240, 240, 240 };
+int rosso[3]    = { 240, 0, 0 };
+int arancio[3] = { 240, 120, 0};
+int giallo[3] = { 120, 240, 0 };
+int verde[3]  = { 0, 240, 0 };
+int blu[3]   = { 0, 0, 240 };
+int indaco[3] = { 120, 0, 120 };
+int viola[3] = { 240, 120, 240 };
 int arcobaleno[3] = { -1, 0, 0};
 
 // Set initial color
@@ -61,7 +62,7 @@ byte evalFadeHold = 0;            // 0: evaluate parameters - 1: fade - 2: hold
 int RGBStep = 0;                  // index used during the progress of "crossFade"
 int R, G, B;                      // RGB values to reach at the end of a "crossFade"
 int stepR, stepG, stepB;          // from the beginning to the end of a "crossFade" each colour is changed every step"X"
-byte currentColour = 2;           // index used during the progress of "naso(arcobaleno)", see the function to see why it starts from 2
+byte currentColour = 3;           // index used during the progress of "naso(arcobaleno)", see the function to see why it starts from 3
 bool blinkStep = 0;
 
 void RGBInit() {
@@ -73,9 +74,9 @@ void RGBInit() {
 // Evaluate the width of a step based on the actual value end the one to reach, for a single light component (R, G or B)
 // The value returned can be negative, so byte data type cannot be used
 int calculateStep (int prevValue, int endValue) {
-  int step = endValue - prevValue;
+  int step = (endValue - prevValue)/STEP_WIDTH;
   if (step) {                     // If its non-zero
-    step = 255/step;              // In the worst case (0->255) the brightness is adjusted each step
+    step = TOTAL_STEPS/step;              // In the worst case (0->255) the brightness is adjusted each step
   }
   return step;
 }
@@ -83,10 +84,10 @@ int calculateStep (int prevValue, int endValue) {
 // Evaluate the actual light component value
 int calculateVal(int step, int val, int counter) {
   if ((step) && counter % step == 0) {    // If step is non-zero and its time to change a value,
-    if (step > 0 && val < 255 - STEP_WIDTH) {    //   increment the value if step is positive and not next to maximum...
+    if (step > 0 && val <= 255 - STEP_WIDTH) {    //   increment the value if step is positive and not next to maximum...
       val += STEP_WIDTH;
     }
-    else if (step < 0 && val > 0 + STEP_WIDTH) { //   ...or decrement it if step is negative and not next to 0
+    else if (step < 0 && val >= 0 + STEP_WIDTH) { //   ...or decrement it if step is negative and not next to 0
       val -= STEP_WIDTH;
     }
   }
@@ -96,13 +97,6 @@ int calculateVal(int step, int val, int counter) {
 
 void crossFade(int color[3]) {
   currentRGBMillis = millis();
-  /*
-  Serial.print(color[0]);
-  Serial.print(" ");
-  Serial.print(color[1]);
-  Serial.print(" ");
-  Serial.println(color[2]);
-  */
   
   if (evalFadeHold == 0) {
     //R = color[0];
@@ -111,33 +105,24 @@ void crossFade(int color[3]) {
     //stepR = calculateStep(prevR, R);
     stepG = calculateStep(prevG, G);
     stepB = calculateStep(prevB, B);
-    
+
     evalFadeHold = 1;
   }
   
   else if (currentRGBMillis - previousRGBMillis >= STEP_DURATION && evalFadeHold==1) {  // Fade
 
-
-
     //redVal = calculateVal(stepR, redVal, RGBStep);
     grnVal = calculateVal(stepG, grnVal, RGBStep);
     bluVal = calculateVal(stepB, bluVal, RGBStep);
 
-    Serial.print(redVal);
-    Serial.print(" ");
-    Serial.print(grnVal);
-    Serial.print(" ");
-    Serial.println(bluVal);
-    
     //analogWrite(RED_PIN, redVal);     // the tone() function conflicts with PWM on pin 11 (RED), so to avoid weird noises we do not use RED fading
     analogWrite(GRN_PIN, grnVal);
     analogWrite(BLU_PIN, bluVal);
     
     previousRGBMillis = currentRGBMillis;
-    RGBStep+=10;
+    RGBStep+=STEP_WIDTH;
     
-    if( RGBStep >= 255 ) {
-      Serial.println("Colore completato");
+    if( RGBStep >= TOTAL_STEPS ) {
       evalFadeHold = 2;
       RGBStep = 0;
     }
@@ -168,10 +153,10 @@ void Robottino::naso (int col[3]) {
       case 1:
         crossFade(arancio);
         break;
-       */
       case 2:
         crossFade(giallo);
         break;
+        */
       case 3:
         crossFade(verde);
         break;
@@ -182,7 +167,7 @@ void Robottino::naso (int col[3]) {
         crossFade(viola);
         break;
       default:
-        currentColour = 2;
+        currentColour = 3;
     }
   }
   else {    // Fixed colours
@@ -529,6 +514,7 @@ void Robottino::ruota (int stepDelay) {
     
     previousServoMillis = currentServoMillis;
   }
+  SoftwareServo::refresh();
 }
 
 void Robottino::ruotaConLuce () {
@@ -558,18 +544,15 @@ void Robottino::ruotaConLuce () {
     
     angle += dir * ANGLE_STEP * multiplier;
     
-    Serial.println(angle);
     servo.write(angle + 90);
       
     previousServoMillis = currentServoMillis;
   }
-
+  SoftwareServo::refresh();
 }
 
 
-void Robottino::begin() {
-  espressione(vuota);   // to avoid white random pixels on screen when not used
-  
+void Robottino::begin() {  
   RGBInit();
   
   sensorsInit();
@@ -577,6 +560,11 @@ void Robottino::begin() {
   buzzInit();
   
   servoInit();
+
+  u8g.firstPage();  // turn the display black
+  do {
+    u8g.drawBitmapP(0, 0, 16, 64, vuota);
+  } while( u8g.nextPage() );
 }
 
 Robottino::Robottino() {
