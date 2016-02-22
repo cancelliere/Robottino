@@ -22,7 +22,7 @@ public:
 
   //UNTESTED
   void ruota (int stepDelay);
-  void ruotaConLuce ();
+  void ruotaConLuce();
 
   void begin ();
 };
@@ -32,12 +32,14 @@ void servoInit();
 extern const uint8_t vuota[] PROGMEM;
 extern const uint8_t normale[] PROGMEM;
 extern const uint8_t trollface[] PROGMEM;
-extern const uint8_t happysmile[] PROGMEM;
+extern const uint8_t angry[] PROGMEM;
 extern const uint8_t bleh[] PROGMEM;
-extern const uint8_t sad [] PROGMEM;
-extern const uint8_t happybigsmile [] PROGMEM;
-extern const uint8_t Sad_mouth_teath_shaded [] PROGMEM;
-extern const uint8_t smile64 [] PROGMEM;
+extern const uint8_t sad[] PROGMEM;
+extern const uint8_t happy[] PROGMEM;
+extern const uint8_t smile[] PROGMEM;
+extern const uint8_t dumb[] PROGMEM;
+extern const uint8_t scaried[] PROGMEM;
+
 
 extern byte antennaDestra;
 extern byte antennaSinistra;
