@@ -528,7 +528,7 @@ void Robottino::ruotaConLuce () {
 		  if (multiplier != 0)
 		  {
 			  this->espressione(happy);
-			  this->naso(nero);
+			  this->naso(verde);
 		  }
 		  multiplier = 0;
 	  }
@@ -536,15 +536,15 @@ void Robottino::ruotaConLuce () {
 		  if (multiplier != 1)
 		  {
 			this->espressione(sad);
-			this->naso(nero);
+			this->naso(viola);
 		  }
 		  multiplier = 1;
 
 	  }
 	  else	if (multiplier != 5) {
 
-		  this->espressione(scaried);
-		  this->naso(verde);
+		  this->espressione(scared);
+		  this->naso(rosso);
 		  multiplier = 5;
 	  }
 	 if (angle < -ANGLE_BOUND || angle > ANGLE_BOUND) {
