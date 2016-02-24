@@ -22,6 +22,7 @@ public:
 
   //UNTESTED
   void ruota (int stepDelay);
+  void posiziona (int angle);
   void ruotaConLuce();
 
   void begin ();

@@ -558,6 +558,9 @@ void Robottino::ruotaConLuce () {
   SoftwareServo::refresh();
 }
 
+void Robottino::posiziona (int angle) { // from +180 to -180 with respect to the center
+  servo.write(angle+90);
+}
 
 void Robottino::begin() {
   RGBInit();
