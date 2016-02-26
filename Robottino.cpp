@@ -31,16 +31,16 @@ SoftwareServo servo;
 // ----------RGB (Nose) behaviour definition----------
 
 // Color arrays
-int nero[3]  = { 0, 0, 0 };
-int bianco[3]  = { 240, 240, 240 };
-int rosso[3]    = { 240, 0, 0 };
-int arancio[3] = { 240, 120, 0};
-int giallo[3] = { 120, 240, 0 };
-int verde[3]  = { 0, 240, 0 };
-int blu[3]   = { 0, 0, 240 };
-int indaco[3] = { 120, 0, 120 };
-int viola[3] = { 240, 120, 240 };
-int arcobaleno[3] = { -1, 0, 0};
+int nero[3]  = { 0, 0, 0 };		//black
+int bianco[3]  = { 240, 240, 240 };	//white	
+int rosso[3]    = { 240, 0, 0 };	//red
+int arancio[3] = { 240, 120, 0};	//orange
+int giallo[3] = { 120, 240, 0 };	//yellow
+int verde[3]  = { 0, 240, 0 };		//green
+int blu[3]   = { 0, 0, 240 };		// blu
+int indaco[3] = { 120, 0, 120 };	//indigo
+int viola[3] = { 240, 120, 240 };	//purple
+int arcobaleno[3] = { -1, 0, 0};	//rainbow (Doesnt work with current pcb design, you may need to use one timer only for the rgb led, so that it doesnt interact with servo or buzzer)
 
 // Set initial color
 int redVal = nero[0];
@@ -143,7 +143,7 @@ void crossFade(int color[3]) {
 // Rainbow
 
 
-void Robottino::naso (int col[3]) {
+void Robottino::naso (int col[3]) {	//naso = nose
   if (col[0] == -1) {  // Rainbow
     switch (currentColour) {  // since we can't use the red LED, we won't show colours mainly composed of that kind of light
       /*
@@ -177,11 +177,11 @@ void Robottino::naso (int col[3]) {
   }
 }
 
-void Robottino::nasoLampeggiante (int col[3], int interval) {
+void Robottino::nasoLampeggiante (int col[3], int interval) {  //nasoLampeggiante = lightingNose
   currentBlinkMillis = millis();
   if (currentBlinkMillis - previousBlinkMillis >= interval) {
     if (!blinkStep) {       // Alternate between the wanted colour...
-      naso(col);
+      naso(col); 
       blinkStep ^= 1;
     }
     else {
@@ -222,13 +222,13 @@ U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);  // I2C / TWI
 unsigned long currentDisplayMillis;
 unsigned long previousDisplayMillis = 0;
 
-byte occhi = 1;
-byte antennaDestra = 2;
-byte antennaSinistra = 3;
-byte antenne = 4;
+byte occhi = 1;			//eyes
+byte antennaDestra = 2;		//rightPhotoResistor
+byte antennaSinistra = 3;	//leftPhotoResistor
+byte antenne = 4;		//both PhotoResistors
 
 // Draw different kinds of facial expressions on the display
-void Robottino::espressione(const uint8_t mouthStyle[]) {
+void Robottino::espressione(const uint8_t mouthStyle[]) {	//espressione is function which shows an emoticon on oled display
   currentDisplayMillis = millis();
   if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) {
     u8g.firstPage();
@@ -500,7 +500,7 @@ void servoInit () {
   delay(30);    //wait for the servo to reach that position
 }
 
-void Robottino::ruota (int stepDelay) {
+void Robottino::ruota (int stepDelay) { //uses the servo to rotates on itself
   currentServoMillis = millis();
 
   if (currentServoMillis - previousServoMillis >= stepDelay) {
@@ -514,10 +514,10 @@ void Robottino::ruota (int stepDelay) {
 
     previousServoMillis = currentServoMillis;
   }
-  SoftwareServo::refresh();
+  SoftwareServo::refresh();	//Servo needs to be refreshed each 50ms with this library, this is not guaranteed  with this line, since we dont exactly know time length of one loop in the arduino code
 }
 
-void Robottino::ruotaConLuce () {
+void Robottino::ruotaConLuce () { //rotates fast and displays scared face if no hands are put on photoresistors, if hand is put very close to robottino it displays an happy face and does not rotate, if hand is not right above robottino than an average behaviour is played
   currentServoMillis = millis();
 
 
