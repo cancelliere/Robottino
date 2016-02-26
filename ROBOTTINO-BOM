@@ -13,9 +13,10 @@ designed pcb, the eagle file will be uploaded in github, we ordered from seeedst
 
 for cabling step, you may buy a ready to use kit, or crimp on your own as we did.
 if you want to crimp the cables on you own you may need 
-1 16 Way Unscreened Flat Ribbon Cable
-1 16 Pin Double Row Straight Male IDC Socket Box header connector 
-1 2*8 Pin 16 Pin Male Header IDC Ribbon Cable Transition Connector
+1 16 Way Unscreened Flat Ribbon Cable like the following http://uk.rs-online.com/web/p/flat-ribbon-cable/0360116/
+1 Connector Shrouded Header 16 Position 2.54mm Solder Straight Thru-Hole part no:753521 manufacturer:AMP/TYCO ELECTRONICS manufacturer no:5103308-5
+1 2 Rows 16 Position wire housing Part no.: 901722 Manufacturer: AMP/TYCO ELECTRONICS Manufacturer no.: 1658622-3
 1 pin crimping tool
-1 pcs KF2510-3P (2.54mm not sure about this size, needs to be checked) Pin Header+Terminal+Housing Connector Kits
-you'll exactly need for one Robottino 16 terminals and 4-4pins housing connectors, you dont need pin header since, housing connector can be directly connected to each modules.
+1 pcs KF2510-3P 2.54mm Pin Header+Terminal+Housing Connector Kits
+you'll exactly need for one Robottino 16 terminals and 4-4pins housing connectors, you dont need pin header since, housing connector can be directly connected to each module.
+a Step-by-Step tutorial on crimping cables can be found on http://www.seetron.com/apps/app_connectors.html
