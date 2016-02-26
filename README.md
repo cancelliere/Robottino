@@ -9,6 +9,4 @@ Third problem= Blue led and servo use the same arduino timer if Servo.h	library 
 Robottino was invented and designed by Tongatron.
 
 This project was made possible thanking to (in alphabetical order):
-Cancelliere
-Tagaf
-Theerbrow
+Cancelliere, Michelino95, Tagaf ,Theerbrow.
