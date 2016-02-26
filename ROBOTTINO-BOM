@@ -1,0 +1,21 @@
+Material you'll need:
+wood body, we used a laser cutting machine to cut the body from a wood panel, design file will be uploaded in github.
+designed pcb, the eagle file will be uploaded in github, we ordered from seeedstudio.com
+2 10kOhm resistors, which work as a partitioner for the photoresistors.
+3 220Ohm resistors, which limit the current in the led.
+1 Buzzer.
+1 Ultrasound Module.
+1 10uF capacitor, in order to filter noise on servo.
+1 128x64 Oled display.
+1 RGB led.
+2 photoresistors.
+1 strip of male pins in order to attach arduino on the back of the pcb.
+
+for cabling step, you may buy a ready to use kit, or crimp on your own as we did.
+if you want to crimp the cables on you own you may need 
+1 16 Way Unscreened Flat Ribbon Cable
+1 16 Pin Double Row Straight Male IDC Socket Box header connector 
+1 2*8 Pin 16 Pin Male Header IDC Ribbon Cable Transition Connector
+1 pin crimping tool
+1 pcs KF2510-3P (2.54mm not sure about this size, needs to be checked) Pin Header+Terminal+Housing Connector Kits
+you'll exactly need for one Robottino 16 terminals and 4-4pins housing connectors, you dont need pin header since, housing connector can be directly connected to each modules.
