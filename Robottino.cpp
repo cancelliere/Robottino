@@ -32,7 +32,7 @@ SoftwareServo servo;
 
 // Color arrays
 int nero[3]  = { 0, 0, 0 };		//black
-int bianco[3]  = { 240, 240, 240 };	//white	
+int bianco[3]  = { 240, 240, 240 };	//white
 int rosso[3]    = { 240, 0, 0 };	//red
 int arancio[3] = { 240, 120, 0};	//orange
 int giallo[3] = { 120, 240, 0 };	//yellow
@@ -40,7 +40,7 @@ int verde[3]  = { 0, 240, 0 };		//green
 int blu[3]   = { 0, 0, 240 };		// blu
 int indaco[3] = { 120, 0, 120 };	//indigo
 int viola[3] = { 240, 120, 240 };	//purple
-int arcobaleno[3] = { -1, 0, 0};	//rainbow (Doesnt work with current pcb design, you may need to use one timer only for the rgb led, so that it doesnt interact with servo or buzzer)
+int arcobaleno[3] = { -1, 0, 0};	//rainbow (Needs a workaround because of compatibility problems between PWN on pin 11 and the tone() function)
 
 // Set initial color
 int redVal = nero[0];
@@ -177,11 +177,11 @@ void Robottino::naso (int col[3]) {	//naso = nose
   }
 }
 
-void Robottino::nasoLampeggiante (int col[3], int interval) {  //nasoLampeggiante = lightingNose
+void Robottino::nasoLampeggiante (int col[3], int interval) {  //nasoLampeggiante = blinkingNose
   currentBlinkMillis = millis();
   if (currentBlinkMillis - previousBlinkMillis >= interval) {
     if (!blinkStep) {       // Alternate between the wanted colour...
-      naso(col); 
+      naso(col);
       blinkStep ^= 1;
     }
     else {
@@ -228,7 +228,7 @@ byte antennaSinistra = 3;	//leftPhotoResistor
 byte antenne = 4;		//both PhotoResistors
 
 // Draw different kinds of facial expressions on the display
-void Robottino::espressione(const uint8_t mouthStyle[]) {	//espressione is function which shows an emoticon on oled display
+void Robottino::espressione(const uint8_t mouthStyle[]) {	// shows a facial expression on the OLED display
   currentDisplayMillis = millis();
   if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) {
     u8g.firstPage();
@@ -285,14 +285,14 @@ void buzzInit () {
   pinMode(BUZZ_PIN, OUTPUT);
 }
 
-void Robottino::theremin(byte sensor) {  //without any calibration
+void Robottino::theremin(byte sensor) {  // without any calibration
   currentBuzzTime = millis();
   if (currentBuzzTime - previousBuzzTime >= thereminDelay) {
     if (sensor == antenne) {
       pitch = map((analogRead(LDR_DX_PIN)+analogRead(LDR_SX_PIN))/2, 0, 1024, 40, 4000);
     }
     else if (sensor == occhi) {
-      pitch = map(eyesDistance(), 0, 50, 40, 4000);  //if the sensor are the LDR, the value can be as large as 1024
+      pitch = map(eyesDistance(), 0, 50, 40, 4000);  // if the sensors are the LDR, the value can be as large as 1024
     }
     tone(BUZZ_PIN, pitch, 20);
     previousBuzzTime = currentBuzzTime;
@@ -482,12 +482,12 @@ void Robottino::superMario()
 }
 
 
-int veloce = 10; //different delay between steps
+int veloce = 10; // different delay between steps
 int lento = 50;
 int crazy = 0;
 
-int angle = 0;  //reference given to the initial position, which is set in servoInit to 90 degrees
-int dir = 1;    //direction of rotation
+int angle = 0;  // reference given to the initial position, which is set in servoInit to 90 degrees
+int dir = 1;    // direction of rotation
 
 int multiplier=0, average, stepDelay;
 
@@ -497,10 +497,10 @@ unsigned long previousServoMillis = 0;
 void servoInit () {
   servo.attach(SERVO_PIN);
   servo.write(90);
-  delay(30);    //wait for the servo to reach that position
+  delay(30);    // wait for the servo to reach that position
 }
 
-void Robottino::ruota (int stepDelay) { //uses the servo to rotates on itself
+void Robottino::ruota (int stepDelay) { // uses the servo to rotate on itself
   currentServoMillis = millis();
 
   if (currentServoMillis - previousServoMillis >= stepDelay) {
@@ -514,10 +514,10 @@ void Robottino::ruota (int stepDelay) { //uses the servo to rotates on itself
 
     previousServoMillis = currentServoMillis;
   }
-  SoftwareServo::refresh();	//Servo needs to be refreshed each 50ms with this library, this is not guaranteed  with this line, since we dont exactly know time length of one loop in the arduino code
+  SoftwareServo::refresh();	// Servo needs to be refreshed each 50ms with this library, this is not guaranteed  with this line, since we dont exactly know time length of one loop in the Arduino code
 }
 
-void Robottino::ruotaConLuce () { //rotates fast and displays scared face if no hands are put on photoresistors, if hand is put very close to robottino it displays an happy face and does not rotate, if hand is not right above robottino than an average behaviour is played
+void Robottino::ruotaConLuce () { // rotates faster and displays a scared face with maximum lighting conditions, with the sensors covered displays an happy face and does not rotate, otherwise an average behaviour is played
   currentServoMillis = millis();
 
 
@@ -558,7 +558,7 @@ void Robottino::ruotaConLuce () { //rotates fast and displays scared face if no 
   SoftwareServo::refresh();
 }
 
-void Robottino::posiziona (int angle) { // from +180 to -180 with respect to the center
+void Robottino::posiziona (int angle) { // from +180 to -180 with respect to the center (actually the range is narrower)
   servo.write(angle+90);
 }
 
@@ -571,7 +571,7 @@ void Robottino::begin() {
 
   servoInit();
 
-  u8g.firstPage();  // turn the display black
+  u8g.firstPage();  // turns the display black at power on
   do {
     u8g.drawBitmapP(0, 0, 16, 64, vuota);
   } while( u8g.nextPage() );

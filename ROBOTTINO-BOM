@@ -1,18 +1,18 @@
-Material you'll need:
-wood body, we used a laser cutting machine to cut the body from a wood panel, design file will be uploaded in github.
-designed pcb, the eagle file will be uploaded in github, we ordered from seeedstudio.com
-2 10kOhm resistors, which work as a partitioner for the photoresistors.
-3 220Ohm resistors, which limit the current in the led.
-1 Buzzer.
-1 Ultrasound Module.
-1 10uF capacitor, in order to filter noise on servo.
-1 128x64 Oled display.
-1 RGB led.
-2 photoresistors.
-1 strip of male pins in order to attach arduino on the back of the pcb.
+Materials you'll need:
+Wooden body, we used a laser cutting machine to cut the body from a wooden panel; design files will be uploaded in github.
+Designed PCB, the eagle files will be uploaded in github, realized by Eurocircuits.
+2 10 kOhm resistors, which work as a partitioner for the photoresistors;
+3 220 Ohm resistors, which limit the current in the led;
+1 Buzzer;
+1 Ultrasound Module;
+1 10uF capacitor, in order to filter noise on servo;
+1 128x64 Oled display;
+1 RGB led;
+2 photoresistors;
+1 strip of male pins in order to attach the Arduino to the back of the PCB.
 
-for cabling step, you may buy a ready to use kit, or crimp on your own as we did.
-if you want to crimp the cables on you own you may need 
+For the cabling step, you may buy a ready to use kit, or crimp on your own as we did.
+if you want to crimp the cables on you own you may need
 1 16 Way Unscreened Flat Ribbon Cable like the following http://uk.rs-online.com/web/p/flat-ribbon-cable/0360116/
 1 Connector Shrouded Header 16 Position 2.54mm Solder Straight Thru-Hole part no:753521 manufacturer:AMP/TYCO ELECTRONICS manufacturer no:5103308-5
 1 2 Rows 16 Position wire housing Part no.: 901722 Manufacturer: AMP/TYCO ELECTRONICS Manufacturer no.: 1658622-3
