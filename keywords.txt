@@ -1,10 +1,16 @@
 Robottino	KEYWORD1
 
+leggiLuce	KEYWORD2
+leggiDistanza	KEYWORD2
+
+luceAccesa	KEYWORD2
+oggettoDistante	KEYWORD2
+
 ruota		KEYWORD2
 ruotaConLuce	KEYWORD2
 
 espressione	KEYWORD2
-mostra	KEYWORD2
+mostra		KEYWORD2
 
 nasoLampeggiante	KEYWORD2
 naso		KEYWORD2

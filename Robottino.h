@@ -10,27 +10,36 @@ class Robottino {
 public:
   Robottino();
 
-  //TESTED
-
-  void naso (int colour[3]);
-  void nasoLampeggiante (int col[3], int interval);
-  void beep (int interval);
-  void theremin(byte sensor);
-  void superMario();
   void espressione(const uint8_t mouthStyle[]);
-  void mostra (byte sensor);
-
-  //UNTESTED
+  void beep (int interval);
+  int leggiDistanza();
+  int leggiLuce(byte sensor);
+  void naso (int colour[3]);
   void ruota (int stepDelay);
   void posiziona (int angle);
+
+  //UNNEEDED BY NOW
+  void nasoLampeggiante (int col[3], int interval);
   void ruotaConLuce();
+  void theremin(byte sensor);
+  void superMario();
+  void mostra (byte sensor);
+
 
   void begin ();
 };
 
-void servoInit();
+bool oggettoDistante();
+bool luceAccesa();
 
 extern const uint8_t vuota[] PROGMEM;
+extern const uint8_t neutra[] PROGMEM;
+extern const uint8_t felice[] PROGMEM;
+extern const uint8_t spaventato[] PROGMEM;
+extern const uint8_t fablabLogo[] PROGMEM;
+extern const uint8_t robottinoLogo[] PROGMEM;
+
+// to be verified with Giovanni
 extern const uint8_t normale[] PROGMEM;
 extern const uint8_t trollface[] PROGMEM;
 extern const uint8_t angry[] PROGMEM;
@@ -49,7 +58,7 @@ extern byte occhi;
 
 extern int veloce;
 extern int lento;
-extern int crazy;
+extern int impazzito;
 
 extern int nero[3];
 extern int bianco[3];
@@ -62,4 +71,6 @@ extern int indaco[3];
 extern int viola[3];
 extern int arcobaleno[3];
 
+extern int silenzio;
+extern int allarme;
 #endif

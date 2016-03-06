@@ -7,5 +7,5 @@ void setup() {
 }
 
 void loop() {
-  Peppino.theremin();   //Peppino vuole cantare, aiutalo coprendo le sue antenne
+  Peppino.theremin(antenne);   //Peppino vuole cantare, aiutalo coprendo le sue antenne
 }
