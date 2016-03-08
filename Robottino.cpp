@@ -216,9 +216,10 @@ int Robottino::leggiDistanza () {               //can't use newPing library beca
   return distance;
 }
 
-byte distanceThreshold = 20;
+byte distanceThreshold = 10;
 
 bool oggettoDistante () {
+  Serial.println(distanzaRilevata);
   if (distanzaRilevata>distanceThreshold) return 1;
   else return 0;
 }
@@ -259,14 +260,20 @@ byte antennaDestra = 2;		//rightPhotoResistor
 byte antennaSinistra = 3;	//leftPhotoResistor
 byte antenne = 4;		//both PhotoResistors
 
+uint8_t * previousFace = NULL;
+
 // Draw different kinds of facial expressions on the display
 void Robottino::espressione(const uint8_t mouthStyle[]) {	// shows a facial expression on the OLED display
   currentDisplayMillis = millis();
-  if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) {
+  if (mouthStyle == previousFace) {
+    return;
+  }
+  else if (currentDisplayMillis - previousDisplayMillis >= DISPLAY_DELAY) {
     u8g.firstPage();
     do {
       u8g.drawBitmapP(0, 0, 16, 64, mouthStyle);
     } while( u8g.nextPage() );
+    previousFace = (uint8_t *) mouthStyle;
     previousDisplayMillis = currentDisplayMillis;
   }
 }
@@ -512,7 +519,7 @@ void Robottino::superMario()
 
 
 int veloce = 10; // different delay between steps
-int lento = 50;
+int lento = 30;
 int impazzito = 0;
 
 int angle = 0;  // reference given to the initial position, which is set in servoInit to 90 degrees
@@ -531,9 +538,8 @@ void servoInit () {
   SoftwareServo::refresh();
 }
 
-void Robottino::ruota (int stepDelay) { // uses the servo to rotate on itself
+bool Robottino::ruota (int stepDelay) { // uses the servo to rotate on itself
   currentServoMillis = millis();
-
   if (currentServoMillis - previousServoMillis >= stepDelay) {
 
     if (angle < - ANGLE_BOUND || angle > ANGLE_BOUND) {
@@ -546,6 +552,8 @@ void Robottino::ruota (int stepDelay) { // uses the servo to rotate on itself
     previousServoMillis = currentServoMillis;
   }
   SoftwareServo::refresh();	// Servo needs to be refreshed each 50ms with this library, this is not guaranteed  with this line, since we dont exactly know time length of one loop in the Arduino code
+  if (angle >= ANGLE_BOUND || angle <= - ANGLE_BOUND) return 1;
+  else return 0;
 }
 
 void Robottino::ruotaConLuce () { // rotates faster and displays a scared face with maximum lighting conditions, with the sensors covered displays an happy face and does not rotate, otherwise an average behaviour is played

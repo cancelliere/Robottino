@@ -15,7 +15,7 @@ public:
   int leggiDistanza();
   int leggiLuce(byte sensor);
   void naso (int colour[3]);
-  void ruota (int stepDelay);
+  bool ruota (int stepDelay);
   void posiziona (int angle);
 
   //UNNEEDED BY NOW
