@@ -4,7 +4,7 @@ leggiLuce	KEYWORD2
 leggiDistanza	KEYWORD2
 
 luceAccesa	KEYWORD2
-oggettoDistante	KEYWORD2
+oggettoVicino	KEYWORD2
 
 ruota		KEYWORD2
 ruotaConLuce	KEYWORD2

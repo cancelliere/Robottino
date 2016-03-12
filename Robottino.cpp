@@ -212,7 +212,7 @@ int Robottino::leggiDistanza () {               //can't use newPing library beca
   delay(1);
   digitalWrite(TRIG_PIN, LOW);
   int distance = pulseIn(ECHO_PIN, HIGH, 5700) / 57;  //Timeout if distance > 100 cm; divide by round-trip microseconds per cm to get cm
-  distanzaRilevata;
+  distanzaRilevata = distance;
   return distance;
 }
 
