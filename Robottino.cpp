@@ -218,9 +218,9 @@ int Robottino::leggiDistanza () {               //can't use newPing library beca
 
 byte distanceThreshold = 10;
 
-bool oggettoDistante () {
+bool oggettoVicino () {
   Serial.println(distanzaRilevata);
-  if (distanzaRilevata>distanceThreshold) return 1;
+  if (distanzaRilevata < distanceThreshold && distanzaRilevata != 0) return 1;
   else return 0;
 }
 

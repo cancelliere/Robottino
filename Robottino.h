@@ -29,7 +29,7 @@ public:
   void begin ();
 };
 
-bool oggettoDistante();
+bool oggettoVicino();
 bool luceAccesa();
 
 extern const uint8_t vuota[] PROGMEM;
