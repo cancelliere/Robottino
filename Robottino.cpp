@@ -205,15 +205,19 @@ void sensorsInit() {
 
 // ----------Eyes----------
 int distanzaRilevata;
+unsigned long previousSonicMillis = 0;
 
 // Returns distance in cm
 int Robottino::leggiDistanza () {               //can't use newPing library because of compatibility problems with tone() on Arduino UNO
-  digitalWrite(TRIG_PIN, HIGH);   //(see: http://forum.arduino.cc/index.php?topic=184162.0 )
-  delay(1);
-  digitalWrite(TRIG_PIN, LOW);
-  int distance = pulseIn(ECHO_PIN, HIGH, 5700) / 57;  //Timeout if distance > 100 cm; divide by round-trip microseconds per cm to get cm
-  distanzaRilevata = distance;
-  return distance;
+  if (millis() - previousSonicMillis > 50) {
+    digitalWrite(TRIG_PIN, HIGH);   //(see: http://forum.arduino.cc/index.php?topic=184162.0 )
+    delay(1);
+    digitalWrite(TRIG_PIN, LOW);
+    int distance = pulseIn(ECHO_PIN, HIGH, 5700) / 57;  //Timeout if distance > 100 cm; divide by round-trip microseconds per cm to get cm
+    distanzaRilevata = distance;
+    previousSonicMillis = millis();
+  }
+  return distanzaRilevata;
 }
 
 byte distanceThreshold = 10;
