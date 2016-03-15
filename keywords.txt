@@ -5,12 +5,16 @@ leggiDistanza	KEYWORD2
 
 luceAccesa	KEYWORD2
 oggettoVicino	KEYWORD2
+secondiTrascorsiMinoriDi	KEYWORD2
+
+cominciaAContare	KEYWORD2
 
 ruota		KEYWORD2
 ruotaConLuce	KEYWORD2
 
 espressione	KEYWORD2
 mostra		KEYWORD2
+nomeScorrevole KEYWORD2
 
 nasoLampeggiante	KEYWORD2
 naso		KEYWORD2

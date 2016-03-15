@@ -7,5 +7,5 @@ void setup() {
 }
 
 void loop() {
-  Peppino.ruotaConLuce();   //Peppino si tranquillizza solo se accarezzato
+  Peppino.nomeScorrevole("PEPPINO");
 }

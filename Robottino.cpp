@@ -220,7 +220,7 @@ int Robottino::leggiDistanza () {               //can't use newPing library beca
   return distanzaRilevata;
 }
 
-byte distanceThreshold = 10;
+byte distanceThreshold = 20;
 
 bool oggettoVicino () {
   Serial.println(distanzaRilevata);
@@ -309,6 +309,17 @@ void Robottino::mostra (byte sensor) {  // it takes around 110 ms to complete wi
   }
 }
 
+void Robottino::nomeScorrevole(char * nome) {
+  for(int xPos = 130; ; xPos -=2) { //temporary solution to make the text flow smoothly...
+    // picture loop
+    u8g.firstPage();
+    do {
+      u8g.setFont(u8g_font_osb35);
+      u8g.setPrintPos(xPos, 50);
+      u8g.print(nome);
+    } while( u8g.nextPage() );
+  }
+}
 
 int pitch;
 unsigned long currentBuzzTime;
@@ -604,6 +615,17 @@ void Robottino::ruotaConLuce () { // rotates faster and displays a scared face w
 void Robottino::posiziona (int angle) { // from +180 to -180 with respect to the center (actually the range is narrower)
   servo.write(angle+90);
   SoftwareServo::refresh();
+}
+
+unsigned long startLoopTime = 0;
+
+void Robottino::cominciaAContare () {
+  startLoopTime = millis();
+}
+
+bool secondiTrascorsiMinoriDi (int secondi) {
+  if ( millis()-startLoopTime < 1000 * secondi ) return 1;
+  else return 0;
 }
 
 void Robottino::begin() {

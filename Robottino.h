@@ -11,12 +11,14 @@ public:
   Robottino();
 
   void espressione(const uint8_t mouthStyle[]);
+  void nomeScorrevole(char * nome);
   void beep (int interval);
   int leggiDistanza();
   int leggiLuce(byte sensor);
   void naso (int colour[3]);
   bool ruota (int stepDelay);
   void posiziona (int angle);
+  void cominciaAContare();
 
   //UNNEEDED BY NOW
   void nasoLampeggiante (int col[3], int interval);
@@ -31,6 +33,7 @@ public:
 
 bool oggettoVicino();
 bool luceAccesa();
+bool secondiTrascorsiMinoriDi (int secondi);
 
 extern const uint8_t vuota[] PROGMEM;
 extern const uint8_t neutra[] PROGMEM;
